@@ -9,7 +9,12 @@ import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class FreeIPAUtilsTest {
+
+/**
+ * Test the {@link FreeIPAUtils}.
+ *
+ */
+public class FreeIPAUtilsTests {
 
 	@Test
 	public void testdiffFormatTime() {
