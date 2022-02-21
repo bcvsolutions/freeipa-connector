@@ -18,6 +18,8 @@
   
 	<properties>
 		<connid.version xmlns="">1.4.3.0</connid.version>
+        <connectorPackage>eu.bcvsolutions.freeipa</connectorPackage>
+        <connectorClass>FreeIPAConnector</connectorClass>
 	</properties>
   
 	<dependencies>
