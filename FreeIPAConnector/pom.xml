@@ -18,7 +18,7 @@
   
 	<properties>
 		<connid.version xmlns="">1.4.3.0</connid.version>
-        <connectorPackage>eu.bcvsolutions.freeipa</connectorPackage>
+		<connectorPackage>eu.bcvsolutions.idm.connector.freeipa</connectorPackage>
         <connectorClass>FreeIPAConnector</connectorClass>
 	</properties>
   
@@ -43,6 +43,12 @@
 			<artifactId>connector-framework</artifactId>
 			<version>${connid.version}</version>
 		</dependency>
+		<dependency>
+            <groupId>net.tirasa.connid</groupId>
+            <artifactId>connector-framework-internal</artifactId>
+            <version>${connid.version}</version>
+            <scope>provided</scope>
+        </dependency>
 		
 		<!-- TEST -->
 		<dependency>
