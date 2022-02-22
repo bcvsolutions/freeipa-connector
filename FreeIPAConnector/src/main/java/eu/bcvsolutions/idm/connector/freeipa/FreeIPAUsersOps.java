@@ -21,14 +21,7 @@
 
 package eu.bcvsolutions.idm.connector.freeipa;
 
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.DISABLED_ATRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.FREE_IPA_USER_ATTRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.LOGIN_ATRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.MEMBER_OF_ATTRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.NS_ACCOUNT_LOCK_ATRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.RENAME_ATTRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.SPECIAL_ATTRIBUTES;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.UID_ATRIBUTE;
+import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -45,6 +38,7 @@ import java.util.Set;
 
 import org.identityconnectors.common.StringUtil;
 import org.identityconnectors.common.logging.Log;
+import org.identityconnectors.common.security.GuardedString;
 import org.identityconnectors.framework.common.exceptions.ConnectorException;
 import org.identityconnectors.framework.common.objects.Attribute;
 import org.identityconnectors.framework.common.objects.AttributeInfo;
@@ -75,6 +69,8 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 	private FreeIPAConnection connection;
 	private static final Log log = Log.getLog(FreeIPAUsersOps.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
+
+	
 	private final boolean debug;
 	
 	/**
@@ -181,13 +177,13 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 
 		for (String paramName : specialParams.keySet()) {
 			switch (paramName) {
-			case DISABLED_ATRIBUTE:
+			case NS_ACCOUNT_LOCK_ATTRIBUTE:
 				// We do not use enabling and disabling of users by calling separate FreeIPA methods
 				// however it might come in handy in the future. If so, then only thing needed to do so
 				// is to add DISABLED_ATRIBUTE in SPECIAL_ATTRIBUTES in FreeIPAConstants class
 				enableDisableUser(login, specialParams.get(paramName));
 				break;
-			case MEMBER_OF_ATTRIBUTE:
+			case MEMBER_OF_GROUP_ATTRIBUTE:
 				processGroupMemberships(login, specialParams.get(paramName), isCreate);
 				break;
 			default:
@@ -211,7 +207,7 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 	 */
 	private void processGroupMemberships(final String login, final Object object, boolean addOnly) {
 		if (!(object instanceof Collection<?>)) {
-			throw new ConnectorException("Malformed " + MEMBER_OF_ATTRIBUTE
+			throw new ConnectorException("Malformed " + MEMBER_OF_GROUP_ATTRIBUTE
 					+ " member of attribute "+object);
 		}
 
@@ -287,14 +283,14 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 	 */
 	private List<?> getIPAMemberships(String login) {
 		Map<String, Object> params = new HashMap<>();
-		params.put(FreeIPAConstants.UID_ATRIBUTE, login);
+		params.put(FreeIPAConstants.UID_ATTRIBUTE, login);
 		FindUserServicePost post = new FindUserServicePost(login,
 				params, this.debug, connection.getConfiguration());
 		JSONResponse<FindResponseResult> res = post.post(this.connection
 				.getWebClient());
 
 		List<Object> ipaMemberships = new ArrayList<>();
-		Object o = res.getResult().getResult()[0].get(MEMBER_OF_ATTRIBUTE);
+		Object o = res.getResult().getResult()[0].get(MEMBER_OF_GROUP_ATTRIBUTE);
 		if (o instanceof Collection<?>) {
 			ipaMemberships.addAll((Collection<?>) o);
 		} else if (o != null) {
@@ -336,10 +332,78 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 
 		Set<AttributeInfo> attributes = new HashSet<AttributeInfo>();
 		attributes.add(Name.INFO); // ID
-
-		attributes.add(new AttributeInfoBuilder(NS_ACCOUNT_LOCK_ATRIBUTE)
+		
+		
+		
+		attributes.add(new AttributeInfoBuilder(CERT_SERIAL_NUMBER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(CN_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(DEPARTMENT_NUMBER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(DESCRIPTION_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(DISPLAY_NAME_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(EMPLOYEE_NUMBER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(GECOS_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(GID_NUMBER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(GIVEN_NAME__ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(HOME_DIRECTORY_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(IDENTITY_NAME_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(INITIALS_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(IPA_USER_AUTH_TYPE_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(JOB_CODE_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(L_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(LOGIN_SHELL_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MAIL_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MAIL_HOST_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MAIL_ROUTING_ADDRESS_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MANAGER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MEMBER_OF_GROUP_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MOBILE_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(NS_ACCOUNT_LOCK_ATTRIBUTE)
 				.setType(Boolean.class).setRequired(false).build());
-
+		attributes.add(new AttributeInfoBuilder(O_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(OU_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(PAGER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(PERSONAL_TITLE_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(SHORT_UID_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(SN_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(TELEPHONE_NUMBER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(TITLE_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(UID_NUMBER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(USER_CERTIFICATE_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(USER_PASSWORD_ATTRIBUTE)
+				.setType(GuardedString.class).setRequired(false).build());
+		
 		// Only ACCOUT type is posible
 		builder.defineObjectClass(ObjectClass.ACCOUNT_NAME, attributes);
 		return builder.build();
@@ -358,7 +422,7 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 			// is the place, where you would implement it
 			// (also in createFilterTranslator method in FreeIPAConnector class)
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put(UID_ATRIBUTE, id.toString());
+			params.put(UID_ATTRIBUTE, id.toString());
 			post = new FindUserServicePost(null, params, debug, connection.getConfiguration());
 		}
 
@@ -397,11 +461,11 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 		for (Attribute attr : attrs) {
 
 			// TODO: maybe configurable login attribute??
-			if (attr.getName().equals(LOGIN_ATRIBUTE)) {
+			if (attr.getName().equals(LOGIN_ATTRIBUTE)) {
 				if (attr.getValue() == null) {
 					log.error(
 							"[FreeIPA connector] Login attribute {0} cannot be null",
-							LOGIN_ATRIBUTE);
+							LOGIN_ATTRIBUTE);
 					throw new ConnectorException(
 							"[FreeIPA connector] Login attribute cannot be null");
 				}

@@ -23,7 +23,7 @@ package eu.bcvsolutions.idm.connector.freeipa;
 
 import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.CN_ATTRIBUTE;
 import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.FREE_IPA_CN_ATTRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.LOGIN_ATRIBUTE;
+import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.LOGIN_ATTRIBUTE;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -204,7 +204,7 @@ public class FreeIPAGroupsOps implements FreeIPAObjectOperations {
 				if (attr.getValue() == null) {
 					log.error(
 							"[FreeIPA connector] CN attribute {0} cannot be null",
-							LOGIN_ATRIBUTE);
+							LOGIN_ATTRIBUTE);
 					throw new ConnectorException(
 							"[FreeIPA connector] CN attribute cannot be null");
 				}

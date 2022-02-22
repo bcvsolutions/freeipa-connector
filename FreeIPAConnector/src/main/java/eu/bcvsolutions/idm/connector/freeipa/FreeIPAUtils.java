@@ -54,7 +54,7 @@ public class FreeIPAUtils {
 	/**
 	 * 
 	 * Creates {@link ConnectorObject} and sets its name according to attribute with 
-	 * name determined by {@link FreeIPAConstants#UID_ATRIBUTE}
+	 * name determined by {@link FreeIPAConstants#UID_ATTRIBUTE}
 	 * 
 	 * @param attrs
 	 * @param oclass
@@ -63,7 +63,7 @@ public class FreeIPAUtils {
 	public static ConnectorObject createConnectorObjectUser(
 			Map<String, Object> attrs, ObjectClass oclass) {
 		return createConnectorObject(attrs, oclass,
-				FreeIPAConstants.UID_ATRIBUTE);
+				FreeIPAConstants.UID_ATTRIBUTE);
 	}
 
 	/**
