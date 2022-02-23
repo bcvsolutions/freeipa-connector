@@ -21,9 +21,7 @@
 
 package eu.bcvsolutions.idm.connector.freeipa;
 
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.CN_ATTRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.FREE_IPA_CN_ATTRIBUTE;
-import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.LOGIN_ATTRIBUTE;
+import static eu.bcvsolutions.idm.connector.freeipa.FreeIPAConstants.*;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -36,6 +34,7 @@ import org.identityconnectors.common.logging.Log;
 import org.identityconnectors.framework.common.exceptions.ConnectorException;
 import org.identityconnectors.framework.common.objects.Attribute;
 import org.identityconnectors.framework.common.objects.AttributeInfo;
+import org.identityconnectors.framework.common.objects.AttributeInfoBuilder;
 import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.OperationOptions;
 import org.identityconnectors.framework.common.objects.ResultsHandler;
@@ -134,7 +133,16 @@ public class FreeIPAGroupsOps implements FreeIPAObjectOperations {
 		final SchemaBuilder builder = new SchemaBuilder(FreeIPAConnector.class);
 
 		Set<AttributeInfo> attributes = new HashSet<AttributeInfo>();
-
+		
+		attributes.add(new AttributeInfoBuilder(DESCRIPTION_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(GID_NUMBER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MANAGED_BY_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		attributes.add(new AttributeInfoBuilder(MEMBER_USER_ATTRIBUTE)
+				.setType(String.class).setRequired(false).build());
+		
 		// Only ACCOUNT type is possible.
 		builder.defineObjectClass(ObjectClass.ACCOUNT_NAME, attributes);
 		return builder.build();

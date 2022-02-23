@@ -38,8 +38,8 @@ public class FreeIPAConstants {
 	public static final String RENAME_ATTRIBUTE = "rename";
 
 	public static final String CERT_SERIAL_NUMBER_ATTRIBUTE = "certserialnumber";
-	public static final String DEPARTMENT_NUMBER_ATTRIBUTE = "description";
-	public static final String DESCRIPTION_ATTRIBUTE = "department";
+	public static final String DEPARTMENT_NUMBER_ATTRIBUTE = "department";
+	public static final String DESCRIPTION_ATTRIBUTE = "description";
 	public static final String DISPLAY_NAME_ATTRIBUTE = "displayname";
 	public static final String EMPLOYEE_NUMBER_ATTRIBUTE = "employeenumber";
 	public static final String GECOS_ATTRIBUTE = "gecos";
@@ -68,6 +68,9 @@ public class FreeIPAConstants {
 	public static final String UID_NUMBER_ATTRIBUTE = "uidnumber";
 	public static final String USER_CERTIFICATE_ATTRIBUTE = "usercertificate";
 	public static final String USER_PASSWORD_ATTRIBUTE = "userpassword";
+	
+	public static final String MANAGED_BY_ATTRIBUTE = "managedby";
+	public static final String MEMBER_USER_ATTRIBUTE = "member_user";
 
 	public static final List<String> SPECIAL_ATTRIBUTES = Arrays
 			.asList(new String[] {MEMBER_OF_GROUP_ATTRIBUTE});
