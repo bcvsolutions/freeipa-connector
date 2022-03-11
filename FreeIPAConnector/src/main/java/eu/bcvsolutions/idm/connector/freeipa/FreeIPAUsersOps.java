@@ -360,7 +360,7 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 		attributes.add(new AttributeInfoBuilder(INITIALS_ATTRIBUTE)
 				.setType(String.class).setRequired(false).build());
 		attributes.add(new AttributeInfoBuilder(IPA_USER_AUTH_TYPE_ATTRIBUTE)
-				.setType(String.class).setRequired(false).build());
+				.setType(String.class).setRequired(false).setMultiValued(true).build());
 		attributes.add(new AttributeInfoBuilder(JOB_CODE_ATTRIBUTE)
 				.setType(String.class).setRequired(false).build());
 		attributes.add(new AttributeInfoBuilder(L_ATTRIBUTE)
@@ -368,15 +368,15 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 		attributes.add(new AttributeInfoBuilder(LOGIN_SHELL_ATTRIBUTE)
 				.setType(String.class).setRequired(false).build());
 		attributes.add(new AttributeInfoBuilder(MAIL_ATTRIBUTE)
-				.setType(String.class).setRequired(false).build());
+				.setType(String.class).setRequired(false).setMultiValued(true).build());
 		attributes.add(new AttributeInfoBuilder(MAIL_HOST_ATTRIBUTE)
-				.setType(String.class).setRequired(false).build());
+				.setType(String.class).setRequired(false).setMultiValued(true).build());
 		attributes.add(new AttributeInfoBuilder(MAIL_ROUTING_ADDRESS_ATTRIBUTE)
-				.setType(String.class).setRequired(false).build());
+				.setType(String.class).setRequired(false).setMultiValued(true).build());
 		attributes.add(new AttributeInfoBuilder(MANAGER_ATTRIBUTE)
 				.setType(String.class).setRequired(false).build());
 		attributes.add(new AttributeInfoBuilder(MEMBER_OF_GROUP_ATTRIBUTE)
-				.setType(String.class).setRequired(false).build());
+				.setType(String.class).setRequired(false).setMultiValued(true).build());
 		attributes.add(new AttributeInfoBuilder(MOBILE_ATTRIBUTE)
 				.setType(String.class).setRequired(false).build());
 		attributes.add(new AttributeInfoBuilder(NS_ACCOUNT_LOCK_ATTRIBUTE)
@@ -485,8 +485,14 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 				params.put(attr.getName(), null);
 			} else {
 				// Deserialize if it is a complex type
-				params.put(attr.getName(),
-						FreeIPAUtils.deserializeIfNecessary(attr.getValue()));
+				if (!IDM_PASSWORD_ATTRIBUTE.equals(attr.getName())) {
+					params.put(attr.getName(),
+							FreeIPAUtils.deserializeIfNecessary(attr.getValue()));
+				} else {
+					// We need to set attribute __PASSWORD__ into attribute userpassword
+					params.put(USER_PASSWORD_ATTRIBUTE,
+							FreeIPAUtils.deserializeIfNecessary(attr.getValue()));
+				}
 			}
 		} // END OF for
 		return login;

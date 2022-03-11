@@ -141,7 +141,7 @@ public class FreeIPAGroupsOps implements FreeIPAObjectOperations {
 		attributes.add(new AttributeInfoBuilder(MANAGED_BY_ATTRIBUTE)
 				.setType(String.class).setRequired(false).build());
 		attributes.add(new AttributeInfoBuilder(MEMBER_USER_ATTRIBUTE)
-				.setType(String.class).setRequired(false).build());
+				.setType(String.class).setRequired(false).setMultiValued(true).build());
 		
 		// Only ACCOUNT type is possible.
 		builder.defineObjectClass(ObjectClass.ACCOUNT_NAME, attributes);
@@ -227,8 +227,14 @@ public class FreeIPAGroupsOps implements FreeIPAObjectOperations {
 				params.put(attr.getName(), null);
 			} else {
 				// Deserialize if it is a complex type
-				params.put(attr.getName(),
-						FreeIPAUtils.deserializeIfNecessary(attr.getValue()));
+				if (!IDM_PASSWORD_ATTRIBUTE.equals(attr.getName())) {
+					params.put(attr.getName(),
+							FreeIPAUtils.deserializeIfNecessary(attr.getValue()));
+				} else {
+					// We need to set attribute __PASSWORD__ into attribute userpassword
+					params.put(USER_PASSWORD_ATTRIBUTE,
+							FreeIPAUtils.deserializeIfNecessary(attr.getValue()));
+				}
 			}
 		} // END OF for
 		return cn;

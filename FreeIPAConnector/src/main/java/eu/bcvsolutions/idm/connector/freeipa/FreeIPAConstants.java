@@ -68,6 +68,7 @@ public class FreeIPAConstants {
 	public static final String UID_NUMBER_ATTRIBUTE = "uidnumber";
 	public static final String USER_CERTIFICATE_ATTRIBUTE = "usercertificate";
 	public static final String USER_PASSWORD_ATTRIBUTE = "userpassword";
+	public static final String IDM_PASSWORD_ATTRIBUTE = "__PASSWORD__";
 	
 	public static final String MANAGED_BY_ATTRIBUTE = "managedby";
 	public static final String MEMBER_USER_ATTRIBUTE = "member_user";
