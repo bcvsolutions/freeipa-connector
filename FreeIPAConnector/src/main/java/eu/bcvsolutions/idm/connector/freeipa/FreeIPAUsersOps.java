@@ -483,6 +483,11 @@ public class FreeIPAUsersOps implements FreeIPAObjectOperations {
 						"[FreeIPA connector] WARNING attribute {0} has no value",
 						attr.getName());
 				params.put(attr.getName(), null);
+			} else if (attr.getValue().isEmpty()) {
+				log.warn(
+						"[FreeIPA connector] WARNING attribute {0} has empty value",
+						attr.getName());
+				params.put(attr.getName(), null);
 			} else {
 				// Deserialize if it is a complex type
 				if (!IDM_PASSWORD_ATTRIBUTE.equals(attr.getName())) {

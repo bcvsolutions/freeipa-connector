@@ -222,7 +222,10 @@ public class FreeIPAUtils {
 			return val;
 
 		} else {
-			// If it is not multivalued, then we try to pass it as it is, if
+			// If it is not multivalued, then we try to pass it as it is, if it is empty we return null.
+			if (value.isEmpty()) {
+				return null;
+			}
 			Object val = value.get(0);
 			return deserializeIfCan(val);
 		}
